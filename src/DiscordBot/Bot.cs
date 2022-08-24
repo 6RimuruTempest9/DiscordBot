@@ -1,4 +1,5 @@
-﻿using DiscordBot.Configuration;
+﻿using DiscordBot.Commands;
+using DiscordBot.Configuration;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using Microsoft.Extensions.Logging;
@@ -7,10 +8,6 @@ namespace DiscordBot
 {
     internal class Bot
     {
-        public DiscordClient DiscordClient { get; private set; }
-
-        public CommandsNextExtension CommandsNextExtension { get; private set; }
-
         public async Task RunAsync(IConfiguration configuration)
         {
             var discordConfiguration = new DiscordConfiguration
@@ -21,18 +18,20 @@ namespace DiscordBot
                 MinimumLogLevel = LogLevel.Debug,
             };
 
-            DiscordClient = new DiscordClient(discordConfiguration);
+            var discordClient = new DiscordClient(discordConfiguration);
 
             var commandsNextConfiguration = new CommandsNextConfiguration
             {
                 StringPrefixes = configuration.Prefixes,
                 EnableDms = false,
-                DmHelp = true,
+                DmHelp = false,
             };
 
-            CommandsNextExtension = DiscordClient.UseCommandsNext(commandsNextConfiguration);
+            var commandsNextExtension = discordClient.UseCommandsNext(commandsNextConfiguration);
 
-            await DiscordClient.ConnectAsync();
+            commandsNextExtension.RegisterCommands<DeveloperCommands>();
+
+            await discordClient.ConnectAsync();
 
             await Task.Delay(-1);
         }
