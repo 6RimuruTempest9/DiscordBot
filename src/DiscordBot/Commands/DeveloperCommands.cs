@@ -58,7 +58,7 @@ namespace DiscordBot.Commands
 
                 await infoMessage.CreateReactionAsync(emoji).ConfigureAwait(false);
 
-                await Task.Delay(TimeSpan.FromSeconds(0.5)).ConfigureAwait(false);
+                await Task.Delay(TimeSpan.FromSeconds(0.2)).ConfigureAwait(false);
             }
 
             await infoMessage.DeleteAsync().ConfigureAwait(false);
